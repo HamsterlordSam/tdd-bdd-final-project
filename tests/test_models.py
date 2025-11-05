@@ -36,6 +36,7 @@ DATABASE_URI = os.getenv(
 )
 
 
+
 ######################################################################
 #  P R O D U C T   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -104,3 +105,20 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+    def test_read_a_product(self):
+        """It should Read a Product"""
+        product = ProductFactory()
+        app.logger.debug(f"Product: {product.name}\n"
+                    f"Description: {product.description}\n"
+                    f"Price: {product.price}\n"
+                    f"Availability:{product.available}"
+                    f"Category:{product.category}")
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        # Fetch it back
+        found_product = Product.find(product.id)
+        self.assertEqual(found_product.id, product.id)
+        self.assertEqual(found_product.name, product.name)
+        self.assertEqual(found_product.description, product.description)
+        self.assertEqual(found_product.price, product.price)
